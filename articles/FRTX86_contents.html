@@ -176,7 +176,7 @@ c.free     #释放机器语言占用的内存
                     <p>nasm真是个好东西，我写了一份汇编语言版&quot;调用桥梁&quot;，直接能编译成纯二进制文件，然后反汇编一下对着填数就好了/w\。</p>
                     <p>测试输出依然正确: Called! arg x = 2 。而且解释器正常运行，没有崩掉哦。</p>
                     <p>反汇编一下我们再这个例子中生成的二进制代码：</p>
-                    <pre><code class="asm">00000000  55                push ebp
+                    <pre>00000000  55                push ebp
 00000001  89E5              mov ebp,esp
 00000003  8B4508            mov eax,[ebp+0x8]
 00000006  D1E0              shl eax,1
@@ -195,7 +195,7 @@ c.free     #释放机器语言占用的内存
 0000002F  89D8              mov eax,ebx
 00000031  5D                pop ebp
 00000032  C3                ret
-                    </code></pre>
+                    </pre>
                     <p>就是<strong>倒着</strong>压入调用者给的参数，然后<strong>倒着</strong>压入argc, method, obj（遵循cdecl调用协议）, 调用rb_funcall，完事后平衡下栈，返回。不过用机器语言还真是...调试了不短时间呢。</p>
                     <p>好了，这个坑也算是填完啦！</p>
                     

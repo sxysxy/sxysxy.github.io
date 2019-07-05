@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta charset=="utf-8">
+        <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
+        <script src="/js/jquery-2.0.2.min.js"></script>
+        <script src="/js/semantic.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/aux.css">
+        <title> 前方高能，请先登录 </title>
+    </head>
+<body class="with_background">
+    <div class="ui main container">
+        <div class = "ui middle aligned center aligned grid">
+            <div class="row">
+                <div class="column" style="max-width: 500px">
+                    <h2 class="ui header">
+                        <div class="content">
+                            前方高能 &nbsp; 请先登录
+                        </div>
+                    </h2>
+                    <!-- form here -->
+                    <div class="ui large form">
+                        <div class="ui existing segment">
+                            <!-- username -->
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input id="login_username" name="username" placeholder="用户名" type="text">
+                                </div>
+                            </div>
+
+                            <!-- passwd -->
+                            <div class="field">
+                                <div class="ui left input">
+                                    <input id="login_password" name="password" type="password">
+                                </div>
+                            </div>
+
+                            <script language="javascript">
+                                function check_login() {
+                                    var username = document.getElementById("login_username").value;
+                                    var password = document.getElementById("login_password").value;
+
+                                    if(username == "hfcloud" && password == "1234") {
+                                        var _ajax = new XMLHttpRequest();
+                                        _ajax.onreadystatechange = function() {
+                                            if(_ajax.readyState == 4 && _ajax.status == 200) {
+                                                document.body.innerHTML = _ajax.responseText;
+                                            }
+                                        };
+                                        _ajax.open("GET", "/tests_area/tests.html", true);
+                                        _ajax.send();
+                                    }else {
+                                        alert("用户名或密码错误，禁止访问");
+                                    }
+                                }
+                            </script>
+
+                            <div class="field">
+                                <button class="ui fluid primary button" onClick="check_login()">
+                                    登录
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- 提示信息 -->
+                    <div class="content">
+                        <span>我才不会告诉你按F12看网页源代码就能知道用户名和密码</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
