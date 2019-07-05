@@ -1,0 +1,204 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> 五子棋 </title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
+        <script src="/js/jquery-2.0.2.min.js"></script>
+        <script src="/js/semantic.min.js"></script>
+        <script src="/js/highlight.pack.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/github.css">
+        <script>hljs.initHighlightingOnLoad();</script>
+        <link rel="stylesheet" type="text/css" href="/css/aux.css">
+        <link rel="stylesheet" type="text/css" href="/css/article.css">
+    </head>
+
+    <body class="with_background">
+        <div class="ui main container">
+
+                <p>在最开始之前，我要特别感谢<a href="http://seiran.mist.so/"> 兰兰姐姐 </a> 在相关技术上给予我的指导。也正是在兰兰姐姐的帮助下，我才能较为顺利地进行<a href="https://github.com/sxysxy/XYGui"> XYGui </a>的开发。
+　
+                    本篇文章主要要解决的问题是，ruby写的&quot;函数&quot;作为&quot;函数指针&quot;被c/c++等语言(其实是机器语言)调用</p>
+                    <h1>准备</h1>
+                    <p>在这里我假定泥大概看过ruby的源码，知道怎么写ruby的c扩展，略懂一些汇编语言与操作系统相关的原理。请安装devkit for ruby(on windows)</p>
+                    <h1>随便写个小东西</h1>
+                    <p>写个这样的dll caller_test.c -&gt; caller_test.dll :</p>
+                    <pre><code class="c">#include &lt;windows.h&gt;
+#define DLL_API __declspec(dllexport) 
+DLL_API void caller(void (*f) (int x))
+{
+    f(2);
+}
+DLL_API BOOL WINAPI DllMain(HINSTANCE hInstance, 
+                        DWORD uReason, DWORD lpReversed)
+{
+    switch(uReason)
+    {
+        case DLL_PROCESS_ATTACH:
+            puts(&quot;Dll Attached&quot;);
+        break;
+        case DLL_PROCESS_DETACH:
+            puts(&quot;Dll Detached&quot;);
+        break;
+    }
+    return TRUE;
+}
+                    </code></pre>
+                    <p>函数caller接收一个函数指针f，然后用2调用它。这个f函数我们用ruby来写:</p>
+                    <p>在dll同目录下先写一个caller_test1.rb:</p>
+                    <pre><code class="ruby">require 'fiddle'
+include Fiddle
+                    
+proc = Class.new(Closure) do
+    define_method :call do |x|
+        puts &quot;Called with x:#{x}&quot;
+        x
+    end
+end.new(TYPE_INT, [TYPE_INT])
+fptr = Function.new(proc, [TYPE_INT], TYPE_INT)
+                    
+addr = dlopen(&quot;caller_test.dll&quot;)['caller']
+caller = Function.new(addr, [TYPE_LONG], TYPE_VOID) 
+caller.call fptr.to_i
+                    </code></pre>
+                    <p>执行这个脚本，即可得到输出&quot;Called with x:2&quot;。脚本内借助fiddle，让dll成功回调了ruby写的&quot;函数&quot;。</p>
+                    <p>现在我们要做的就是不借助Fiddle::Closure，实现dll调用ruby。</p>
+                    <h1>ruby解释器调用ruby函数的途径</h1>
+                    <p>ruby解释器内有一个叫做rb_funcall的函数，这是ruby解释器调用ruby的方法的接口。第一个参数是对象，也就是&quot;self&quot;，第二个参数是方法名，第三个参数是调用这个ruby方法的参数个数，后面跟着参数列表。也就是rb_funcall(obj, rb_intern(&quot;method&quot;), argc, ...)。所以让机器语言调用ruby的&quot;函数&quot;的方法也就显而易见了: 让ruby动态生成一段机器语言，调用rb_funcall并把所需要的参数压入栈即可。下面就来实现这个。</p>
+                    <p>首先要做一个ruby的c扩展，用以得到rb_funcall的地址，和rb_intern(&quot;call&quot;)的值，并封装一些必要的函数。现在来写一个 caller_ext.c (如果泥是直接复制粘贴的代码，可要注意文件名一定是caller_ext.c)，（不要问我怎么编译c扩展）:</p>
+                    <pre><code class="c">#include &quot;ruby.h&quot;
+VALUE get_rb_funcall(VALUE self)
+{
+    return INT2NUM((int)rb_funcall);
+}
+VALUE get_ptr_val(VALUE self)
+{
+    return INT2NUM(self);
+}
+VALUE get_intern(VALUE self, VALUE name)
+{
+    return INT2NUM(rb_intern(RSTRING_PTR(name)));
+}
+void Init_caller_ext()
+{
+    rb_define_method(rb_mKernel, &quot;get_rb_funcall&quot;, get_rb_funcall, 0);
+    rb_define_method(rb_mKernel, &quot;get_ptr_val&quot;, get_ptr_val, 0);
+    rb_define_method(rb_mKernel, &quot;get_intern&quot;, get_intern, 1);
+}
+                    </code></pre>
+                    <p>get_ptr_val用于得到ruby对象的指针的值，get_rb_funcall用于得到rb_funcall的地址，get_intern用于得到一个方法名的&quot;ruby内部表示法&quot;(算是个哈希值)。</p>
+                    <p>做个试验</p>
+                    <pre><code class="ruby">require './caller_ext'
+require 'fiddle'
+include Fiddle
+f = Function.new(get_rb_funcall, [TYPE_INT, TYPE_INT, TYPE_INT, TYPE_INT], TYPE_INT)
+f.call get_ptr_val, get_intern(&quot;puts&quot;), 1, &quot;233&quot;.get_ptr_val  #=&gt; 233
+                    </code></pre>
+                    <p>正确地输出了233</p>
+                    <p>然后我们用ruby动态地生成机器语言，调用rb_funcall，实现这样的过程，先贴出来代码</p>
+                    <pre><code class="ruby">=begin
+
+    动态生成机器语言，搭建机器语言 -&gt; ruby解释器 -&gt; ruby代码之间的桥梁
+        by sxysxy 2016.11.28
+=end
+
+require 'fiddle'
+require './caller_ext.so'
+include Fiddle
+
+class OpCode
+    attr_accessor :ptr
+    attr_accessor :length
+    #gen_code
+    #用法: obj，持有方法method的对象
+    #      method, 方法名(一个字符串)
+    #      argc, 被回调的ruby &quot;函数&quot; 需要的参数的个数
+    #      proto, 调用协议，默认cdecl
+    # stdcall的实现没写(留做作业噗)...如果需要支持stdcall，需要最后再把调用者的压栈平衡掉。(也就多两行代码..)
+    def gen_code(obj, method, argc, proto = :cdecl)  
+        s = &quot;&quot;
+        s += [0x55].pack(&quot;C&quot;) #push ebp
+        s += [0x89, 0xe5].pack(&quot;CC&quot;) #mov ebp, esp
+      
+        cnt = 4+argc*4;   #参数地址偏移量
+        argc.times do
+            s += [0x8b, 0x45].pack(&quot;CC&quot;)+[cnt].pack(&quot;C&quot;) #mov eax, [ebp+cnt]
+            s += [0xd1, 0xe0].pack(&quot;CC&quot;) #shl eax, 1
+            s += [0x40, 0x50].pack(&quot;CC&quot;) #inc eax, push eax
+            cnt -= 4
+        end
+       
+        s += ([0x68]+[argc].pack(&quot;L&quot;).bytes).pack(&quot;C*&quot;) #push dword argc
+        s += ([0x68]+[get_intern(method)].pack(&quot;L&quot;).bytes).pack(&quot;C*&quot;) #push dword method
+        s += ([0x68]+[obj.get_ptr_val].pack(&quot;L&quot;).bytes).pack(&quot;C*&quot;) #push dword obj
+        
+        #call rb_funcall
+        #s += [0x9a].pack(&quot;C&quot;)+[get_rb_funcall].pack(&quot;L&quot;)+[0].pack(&quot;S&quot;)
+        s += [0xb9].pack(&quot;C&quot;)+[get_rb_funcall].pack(&quot;L&quot;) #mov ecx, rb_funcall
+        s += [0xff, 0xd1].pack(&quot;CC&quot;)    #call ecx
+
+        s += [0x89, 0xc3].pack(&quot;CC&quot;)   #mov ebx, eax
+        s += ([0xb8]+[argc].pack(&quot;L&quot;).bytes).pack(&quot;C*&quot;) #mov eax, argc
+        s += [0x83, 0xc0, 0x03].pack(&quot;CCC&quot;)  #add eax, byte 3
+        s += [0xc1, 0xe0, 0x02].pack(&quot;CCC&quot;)  #shl eax, byte 2
+        s += [0x01, 0xc4].pack(&quot;CC&quot;)    #add esp, eax
+        s += [0x89, 0xd8].pack(&quot;CC&quot;)    #mov eax, ebx
+        s += [0x5d, 0xc3].pack(&quot;CC&quot;)    #pop ebp, ret
+        
+        @ptr = Fiddle::Pointer.malloc(s.length)
+        @ptr[0, s.length] = s
+        @length = s.length
+        self
+    end
+    def free
+        @ptr.free
+    end
+    def addr
+        @ptr.to_i
+    end
+end
+
+def test_call(x)  #被测试调用的函数
+    puts &quot;Called! arg x = #{x}&quot;
+end
+
+c = OpCode.new
+c.gen_code(Kernel, &quot;test_call&quot;, 1)
+File.open(&quot;test_gen_code.bin&quot;, &quot;wb&quot;) do |f|
+    f.write c.ptr[0, c.length]  #这里把生成的机器语言输出到文件，方便反汇编查看
+end
+
+addr = dlopen(&quot;caller_test.dll&quot;)['caller']
+caller = Function.new(addr, [TYPE_LONG], TYPE_VOID)    
+caller.call c.addr  #把c.addr作为函数指针传入。
+c.free     #释放机器语言占用的内存
+                    </code></pre>
+                    <p>nasm真是个好东西，我写了一份汇编语言版&quot;调用桥梁&quot;，直接能编译成纯二进制文件，然后反汇编一下对着填数就好了/w\。</p>
+                    <p>测试输出依然正确: Called! arg x = 2 。而且解释器正常运行，没有崩掉哦。</p>
+                    <p>反汇编一下我们再这个例子中生成的二进制代码：</p>
+                    <pre><code class="asm">00000000  55                push ebp
+00000001  89E5              mov ebp,esp
+00000003  8B4508            mov eax,[ebp+0x8]
+00000006  D1E0              shl eax,1
+00000008  40                inc eax
+00000009  50                push eax
+0000000A  6801000000        push dword 0x1
+0000000F  68D0510000        push dword 0x51d0
+00000014  68E8797102        push dword 0x27179e8
+00000019  B97016A46D        mov ecx,0x6da41670
+0000001E  FFD1              call ecx
+00000020  89C3              mov ebx,eax
+00000022  B801000000        mov eax,0x1
+00000027  83C003            add eax,byte +0x3
+0000002A  C1E002            shl eax,byte 0x2
+0000002D  01C4              add esp,eax
+0000002F  89D8              mov eax,ebx
+00000031  5D                pop ebp
+00000032  C3                ret
+                    </code></pre>
+                    <p>就是<strong>倒着</strong>压入调用者给的参数，然后<strong>倒着</strong>压入argc, method, obj（遵循cdecl调用协议）, 调用rb_funcall，完事后平衡下栈，返回。不过用机器语言还真是...调试了不短时间呢。</p>
+                    <p>好了，这个坑也算是填完啦！</p>
+                    
+        </div>
+    </body>
+</html>

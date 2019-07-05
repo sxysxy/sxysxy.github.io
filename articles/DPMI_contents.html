@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title> 五子棋 </title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
+        <script src="/js/jquery-2.0.2.min.js"></script>
+        <script src="/js/semantic.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/css/aux.css">
+        <link rel="stylesheet" type="text/css" href="/css/article.css">
+    </head>
+
+    <body class="with_background">
+        <div class="ui main container">
+
+                <h4>狄利克雷卷积</h4>
+                <p>给出 元素为数论函数的集合G，与在G上的二元运算符 *，定义G中两元素 f与g 的狄利克雷卷积为：</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? (f * g)(n) = \sum_{d|n}^{ }f(d)g(\frac{n}{d})"></p>
+                <div style="margin-left: 2em">
+                <p>运算满足：</p>
+                <ul>
+                <li>交换律：</li>
+                </ul>
+                <p style="margin-left: 30px"> <img src="http://latex.codecogs.com/gif.latex? f * g= g * f"> </p>
+                <ul>
+                <li>结合律</li>
+                </ul>
+                <p style="margin-left: 30px"> <img src="http://latex.codecogs.com/gif.latex? (f * g)*h= f * (g*h)"> </p>
+                <ul>
+                <li>单位元</li>
+                </ul>
+                <p style="margin-left: 30px"> <img src="http://latex.codecogs.com/gif.latex? f = f * \epsilon = \epsilon * f, \epsilon (n) =  \begin{cases}
+                1  &n = 1 \cr 0 &n \ne 1 \end{cases}"> </p>
+                <ul>
+                <li>逆元</li>
+                </ul>
+                <p style="margin-left: 30px"> <img src="http://latex.codecogs.com/gif.latex? f * f^{-1} = f^{-1} * f = \epsilon, f(1) \ne 0"> </p>
+                <p>特别地，狄利克雷卷积的逆元：</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? f^{-1}(n) = \begin{cases} 
+                \frac{1}{f(1)} & n = 1 \cr 
+                \frac{-1}{f(1)} \sum_{d|n \land d \ne n}^{ } f(\frac{n}{d})f^{-1}(d)  &otherwise 
+                \end{cases}"></p>
+                </div>
+                <h4>莫比乌斯反演</h4>
+                <p>莫比乌斯反演的结论：有数论函数f, g</p>
+                <p class="formula_indent"><img src="http://latex.codecogs.com/gif.latex?$if $ f(n) = \sum_{d|n} g(d), $then $ g(n) = \sum_{d|n}^{ } \mu(d)f(\frac{n}{d})"></p>
+                <p>其中μ是莫比乌斯函数</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? \mu(n) = \begin{cases}
+                1 & n=1 \cr
+                (-1)^k & n = p_{1}p_{2}...p_{k}, $where \it p_{1}, p_{2},...p_{k}$ $ are all unique primes$ \cr
+                0 &otherwise
+                \end{cases}"></p>
+                <p>根据莫比乌斯函数的重要性质：</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? \sum_{d|n}^{ }\mu(d) = \begin{cases}
+                1 & n = 1\cr
+                0 & n > 1
+                \end{cases}"></p>
+                <p>显然：莫比乌斯函数的逆元</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? \mu^{-1}(n) = 1"></p>
+                <p>因为把上面这个性质改写一下：</p>
+                <p><img class="center" src="http://latex.codecogs.com/gif.latex? \sum_{d|n}^{ }\mu(d) = \sum_{d|n}^{ }\mu(d)*1 = (\mu * 1)(n) = \begin{cases}
+                1 & n = 1\cr
+                0 & n > 1
+                \end{cases} = \epsilon(n)"></p>
+                <p>根据定义即可得出莫比乌斯函数的逆元（逆函数） 为 1 (即常函数1)</p>
+                <p>这样，莫比乌斯反演就可以证明了：因为</p>
+                <p class="formula_indent"><img src="http://latex.codecogs.com/gif.latex? f(n) = \sum_{d|n}^{ } g(d) = \sum_{d|n}^{ } g(d)*1 =  \sum_{d|n}^{ } g(d)\mu^{-1}(\frac{n}{d})"></p>
+                <p>写成狄利克雷卷积的形式就是：</p>
+                <p class="formula_indent"><img src="http://latex.codecogs.com/gif.latex? f = g*1 = g*\mu^{-1}"></p>
+                <p>即可得到</p>
+                <p class="formula_indent"><img src="http://latex.codecogs.com/gif.latex? f * \mu = g*\mu^{-1}*\mu = g"></p>
+                <p>展开来写也就是</p>
+                <p class="formula_indent" ><img src="http://latex.codecogs.com/gif.latex? g(n) = (f * \mu)(n) = \sum_{d|n}^{ } f(d)\mu(\frac{n}{d})"></p>
+                <p>运用简单的换元小法术，即可得到莫比乌斯反演的结论：</p>
+                <p class="formula_indent"><img src="http://latex.codecogs.com/gif.latex? g(n) = \sum_{d|n}^{ } \mu(d)f(\frac{n}{d})"></p>
+                <!--
+                <h4>最后</h4>
+                <p>为什么再写一遍这个莫比乌斯反演。</p>
+                <p>当初学习莫比乌斯反演的时候，只当这是找规律得到的性质。</p>
+                <p>现在学习到狄利克雷卷积这种运算，重新证明了一遍莫比乌斯反演的结论。</p>
+                <p>于是感叹抽象代数的魅力qwq...</p>
+                -->
+        </div>
+    </body>
+</html>
