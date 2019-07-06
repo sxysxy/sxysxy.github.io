@@ -23,6 +23,21 @@
                         
                         <tr><td> 1 <td> <a class="bold_dark" target="_parent" href="/articles/Dirichlet_Product_Mobius_Inversion.html">狄利克雷卷积与莫比乌斯反演</a> <td> <a class="ui tiny red label">数论</a> <a class="ui tiny purple label">抽象代数</a> </td> </td></tr>
                         <tr><td> 2 <td> <a class="bold_dark" target="_parent" href="/articles/From_Ruby_To_X86code.html">从ruby到x86机器语言</a><td> <a class="ui tiny green label">黑科技</a> <a class="ui tiny yellow label">底层原理</a> </tr>
+                        <tr><td> 3 <td> <a class="bold_dark" onClick="tellyou()">测试区的用户名密码</a> <td> <a class="ui tiny pink label">杂项</a> </td> </tr>
+
+                        <script language="javascript">
+                            function tellyou() {
+                                var _ajax = new XMLHttpRequest();
+                                _ajax.onreadystatechange = function() {
+                                    if(_ajax.readyState == 4 && _ajax.status == 200) {
+                                        document.getElementById("tellyou").innerHTML = _ajax.responseText;
+                                    }
+                                };
+                                _ajax.open("GET", "/articles/Username_Password.html");
+                                _ajax.send();
+                            }
+                        </script>
+
                         <!--
                         <tr><td> 3 <td> <a class="bold_dark" target="_blank" href="https://blog.csdn.net/u013632138/article/details/53355703">一个简单图形界面框架XYGui的设计与实现 （一）</a> <td> <a class="ui tiny blue label">GUI编程</a> <a class="ui tiny pink label">Win32</a> </td></tr>
                         <tr><td> 4 <td> <a class="bold_dark" target="_blank" href="https://blog.csdn.net/u013632138/article/details/53385275">一个简单图形界面框架XYGui的设计与实现 （二）</a> <td> <a class="ui tiny blue label">GUI编程</a> <a class="ui tiny pink label">Win32</a> </td></tr>
@@ -32,6 +47,9 @@
                         -->
                     </tbody>
                 </table>
+                <div id="tellyou" class="ui container">
+
+                </div>
             </div>
         </div>
     </div>
