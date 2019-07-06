@@ -5,95 +5,172 @@
         <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
         <script src="/js/jquery-2.0.2.min.js"></script>
         <script src="/js/semantic.min.js"></script>
-        <link rel="stylesheet" type="text/css" href="/css/aux.css">
-        <title> 主页- 我的简历 </title>
+        <title> 主页 </title>
+        <style>
+            .main {
+                margin-top :2em
+            } 
+        </style>
+    
     </head>
+    
     <body>
-   
-        <div id="guide_menu" class="ui sidebar inverted vertical menu visible" style="width: 15%; height: auto; float: left">
-            <div class="item">
-                <a class="item" href="/">
-                    <img src="/res/face.jpg" width=32 height=32>
-                    <b> &nbsp; 主页</b>
-                </a>    
+        <div class="ui main container">
+        
+             <div class="ui grid">
+                <div class="row">
+            
+                    <div class="five wide column">
+                        
+                        <!-- 头像 -->
+                        <div class="ui card" style="width: 100%">
+                            <div class="blurring dimmable image">
+                                <img src="/res/face.jpg">
+                            </div>
+                            <div class="ui content center aligned" style="padding: 3">
+                                <span style="margin-top: 5px; margin-bottom: 5px">头像这么可爱，一定是男孩子</span>
+                            </div>
+                        </div>
+
+                        <div class="ui top attached block header">
+                            各种称呼
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <ul class="ui list">
+                                <li> 真名：石响宇</li>
+                                <li> 二次元圈名：古明地⑨</li>
+                                <!--
+                                <li> 常见网名：hfcloud、半云、sxysxy</li>
+                                -->
+                                <li> 专属称号：全年级最菜学委</li>
+                            </ul>
+                        </div>
+                        <div class="ui top attached block header">
+                            联系方式
+                        </div>
+                        <div class="ui bottom attached segment">
+                            <ul class="ui list">
+                                <li>QQ: 1441157749</li>
+                                <li>Email: sxysxygm@gmail.com</li>
+                            </ul>
+                        </div>
+                        <div class="ui top attached block header">
+                            音乐
+                        </div>
+                        <div class="ui bottom attached segment" style="margin: 0; padding: 0">
+                            <iframe frameborder="0" border="0" 
+                                width="100%" height="350px" 
+                                src="//music.163.com/outchain/player?type=0&id=912301634&auto=0&height=80">
+                            </iframe>
+                        </div>
+                        
+
+                    </div>
+            
+                    <div class="eleven wide column">
+                        <div class="ui one column grid">
+                            <div class="column">
+                                <div class="ui top attached block header">
+                                    <h2 class="ui header">科技水平</h2>
+                                </div>
+                                <div class="ui bottom attached segment">
+                                    <div class="ui two column grid"  >
+                                        <div class="eight wide column">
+                                            <h3> 科研兴趣 </h3>
+                                            <ul class="ui list">
+                                                <li>人工智能 自然语言处理/图像处理 方向</li>
+                                                <li>算法与数据结构</li>
+                                                <li>计算机图形学</li>
+                                                <li>函数式编程</li>
+                                                <li>编程语言理论</li>
+                                            </ul>
+                                            <p>热爱编程，喜欢学习与研究，想成为真正的学术大佬TAT</p>
+                                            <div class="ui container" style="text-align: center; height: 100%;">
+                                                <span style="vertical-align: 40%">施工中</span>
+                                            </div>
+                                        </div>
+                                        <div class="eight wide column" style="margin-bottom: 12px">
+                                            <h3> 教育背景 </h3>
+                                            <div class="ui top attached block header" style="font-size: 12">高中就读于郑州市第十一中学</div>
+                                            <div class="ui bottom attached segment">
+                                                <ul class="ui list">
+                                                    <li class="item">学习化学竞赛，信息学竞赛</li>
+                                                    <li class="item">信息学竞赛省一等奖，2017年河南省省队非正式成员</li>
+                                                </ul>
+                                            </div>
+                                            <div class="ui top attached block header" style="font-size: 12">大学: BJTU</div>
+                                            <div class="ui bottom attached segment">
+                                                <ul class="ui list">
+                                                    <li class="item">计算机与科学技术(CS)专业</li>
+                                                    <li class="item">目前课余时间正在参与人工智能相关科研项目</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ui content center aligned" style="min-height: 200px">
+                                        <div class="ui top attached block header">
+                                            <h3 class="ui header center aligned">相关成果展示</h3>
+                                        </div>
+                                        <div class="ui relaxed divided list">
+                                            <div class="ui column grid" style="padding: 5px">
+                                                <div class="ui two wide">
+                                                    <img class="large middle aligned icon" src="https://github.com/favicon.ico"></i>
+                                                </div>
+                                                <div class="ui fourteen wide" style="margin-left: -15px">
+                                                    <a class="header" target="_blank" href="https://github.com/sxysxy/HfEngine">HfEngine</a>
+                                                    <div class="description">一个为弹幕射击游戏设计的高性能的游戏引擎，支持多线程渲染，使用Ruby作为脚本语言扩展</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="ui column grid" style="padding: 5px">
+                                                <div class="ui two wide">
+                                                    <img class="large middle aligned icon" src="https://github.com/favicon.ico"></i>
+                                                 </div>
+                                                <div class="ui fourteen wide" style="margin-left: -15px">
+                                                    <a class="header" target="_blank" href="https://github.com/sxysxy/VisualGensokyo">VisualGensokyo</a>
+                                                    <div class="description">基于深度学习的东方Project游戏角色图像识别</div>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="ui column grid" style="padding: 5px">
+                                                <div class="ui two wide">
+                                                    <img class="large middle aligned icon" src="https://github.com/favicon.ico"></i>
+                                                </div>
+                                                <div class="ui fourteen wide" style="margin-left: -15px">
+                                                    <a class="header" target="_blank" href="https://github.com/sxysxy/XYGui">XYGui</a>
+                                                    <div class="description">一个大部分使用Ruby语言实现的快捷，易用的Ruby GUI框架</div>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="ui top attached block header">
+                                    <span class="ui header">个人说明</h2>    
+                                    <span style="text-decoration: line-through; font-size: 9px"> 小哥哥单身可撩 </span>
+                                </div>
+                                <div class="ui bottom attached segment">
+                                    <div class="ui top attached header">
+                                        Bad Apple!
+                                    </div>
+                                    <div class="ui bottom attached segment">
+                                        <iframe id="myVideo" class="myvideo" width="560" height="315" src="//player.bilibili.com/player.html?aid=187660&amp;cid=&amp;page=" frameborder="0" allowfullscreen=""></iframe>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+            
+                </div>
+            
             </div>
             
-            <div class="item">
-                <a class="item" href="/" >
-                    <b>我的简历</b>
-                </a>
-            </div>
-
-            <div class="item">
-                <div class="header" style="padding-left: 37%; padding-bottom: 12px"> 
-                    <b>广场</b> 
-                </div>
-                <a class="menu">
-                    <a class="item" href="/gomoku">
-                        五子棋
-                    </a>
-                    
-                    <a class="item" href="/articles">
-                        文章
-                    </a>
-
-                    <a class="item" href="/tests_area">
-                        测试区
-                    </a>
-                </a>
-            </div>
-
-            <div style="height: auto; width: 100%; padding: 10px;">
-                
-                <span id="clock_text" class="clock" style="margin-left: 11%"> </span>
-
-                <script language="javascript">
-                    var timerID = null
-                    var timerRunning = false
-                    function stopClock() {
-                        if(timerRunning) {
-                            clearTimeout(timerID)
-                            timerRunning = false
-                        }
-                    }
-                    function startClock() {
-                        stopClock();
-                        showTime();
-                    }
-                    function showTime() {
-                        var now = new Date();
-                        var hours = now.getHours();
-                        var minutes = now.getMinutes();
-                        var seconds = now.getSeconds();
-                        var time = "" + ((hours > 12) ? hours-12 : hours)
-                        time += ((minutes < 10) ? ":0":":") + minutes
-                        time += ((seconds < 10) ? ":0":":") + seconds;
-                        time += (hours >= 12) ? "P.M." : "A.M."
-                        document.getElementById("clock_text").innerHTML = ""+time;
-                        timerID = setTimeout("showTime()", 1000);
-                        timerRunning = true;
-                    }
-                    showTime();
-                </script>
-
-            </div>
         </div>
-
-        <!-- 导航菜的右边部分 -->
-        <div style="width: 85%; height: 100%; float: right">
-
-            <div style="width: 100%; height: 94%; float: top">
-                <iframe width=100% height=100% marginwidth=0 marginheight=0 frameborder="no" border="0" src="./contents.html" ></iframe> 
-            </div>
-
-            <div style="width: 100%; height: 6%; float: bottom">
-                <div class = "ui inverted siderbar horizen bottom visible" style="margin-left: 15%; margin-right: 15%; height: 100%">
-                    <p style="text-align: center; margin-bottom: 0px"> 北京交通大学 计算机1810班 石响宇 </p>
-                    <p style="text-align: center"> copyright@2019 <a href=mailto:sxysxygm@gmail.com>sxysxygm@gmail.com</a> </p>
-                </div>
-            </div>
-
-        </div>
-       
     </body>
+
 </html>
