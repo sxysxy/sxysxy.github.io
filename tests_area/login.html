@@ -44,6 +44,24 @@
                                         _ajax.onreadystatechange = function() {
                                             if(_ajax.readyState == 4 && _ajax.status == 200) {
                                                 document.body.innerHTML = _ajax.responseText;
+                                        
+                                                var regDetectJs = /<script(.|\n)*?>(.|\n|\r\n)*?<\/script>/ig;
+                                                var jsContained = _ajax.responseText.match(regDetectJs); //ajaxLoadedData为ajax获取到的数据
+
+                                                if(jsContained) {
+                                                    var regGetJS = /<script(.|\n)*?>((.|\n|\r\n)*)?<\/script>/im;
+                                                    var jsNums = jsContained.length;
+                                                    for (var i=0; i<jsNums; i++) {
+                                                        var jsSection = jsContained[i].match(regGetJS);
+                                                        if(jsSection[2]) {
+                                                            if(window.execScript) {
+                                                                window.execScript(jsSection[2]);
+                                                            } else {
+                                                                window.eval(jsSection[2]);
+                                                            }
+                                                        }
+                                                    }
+                                                }
                                             }
                                         };
                                         _ajax.open("GET", "/tests_area/tests.html", true);

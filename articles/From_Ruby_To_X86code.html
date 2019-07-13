@@ -5,7 +5,8 @@
         <link rel="stylesheet" type="text/css" href="/css/semantic.min.css">
         <script src="/js/jquery-2.0.2.min.js"></script>
         <script src="/js/semantic.min.js"></script>
-        <title> 主页 </title>
+        <link rel="stylesheet" type="text/css" href="/css/aux.css">
+        <title> 从ruby到x86机器语言 </title>
     </head>
     <body>
    
@@ -41,6 +42,41 @@
                     </a>
                 </a>
             </div>
+
+            <div style="height: auto; width: 100%; padding: 10px;">
+                
+                <span id="clock_text" class="clock" style="margin-left: 11%"> </span>
+
+                <script language="javascript">
+                    var timerID = null
+                    var timerRunning = false
+                    function stopClock() {
+                        if(timerRunning) {
+                            clearTimeout(timerID)
+                            timerRunning = false
+                        }
+                    }
+                    function startClock() {
+                        stopClock();
+                        showTime();
+                    }
+                    function showTime() {
+                        var now = new Date();
+                        var hours = now.getHours();
+                        var minutes = now.getMinutes();
+                        var seconds = now.getSeconds();
+                        var time = "" + ((hours > 12) ? hours-12 : hours)
+                        time += ((minutes < 10) ? ":0":":") + minutes
+                        time += ((seconds < 10) ? ":0":":") + seconds;
+                        time += (hours >= 12) ? "P.M." : "A.M."
+                        document.getElementById("clock_text").innerHTML = ""+time;
+                        timerID = setTimeout("showTime()", 1000);
+                        timerRunning = true;
+                    }
+                    showTime();
+                </script>
+
+            </div>
         </div>
 
         <!-- 导航菜的右边部分 -->
@@ -48,7 +84,7 @@
 
             <div style="width: 100%; height: 94%; float: top">
                 <iframe width=100% height=100% marginwidth=0 marginheight=0 frameborder="no" border="0" src="/articles/FRTX86_contents.html" ></iframe> 
-            </div>
+            </div>            
 
             <div style="width: 100%; height: 6%; float: bottom">
                 <div class = "ui inverted siderbar horizen bottom visible" style="margin-left: 15%; margin-right: 15%; height: 100%">
@@ -61,4 +97,3 @@
        
     </body>
 </html>
-

@@ -1,5 +1,61 @@
 <html>
     <!--不需要body，这个是被ajax动态加载过去的-->
-
-  
+    <div class="ui main container">
+        <h1 id="header" class="ui header" style="text-align: center"> 应实验要求，这里展示前面的模块没有用到，而作业要求使用的效果 </h1>
+        <script language="javascript">
+            var colors_i = 0;
+            function flash_text() {
+                var colors = new Array('#000000', '#FF0000', '#0FF0FF', '#00FF0F', '#FFF000', '#00FFFF', '#00FF00', '#0000FF');
+                document.getElementById("header").style.color = colors[colors_i];
+                colors_i = (colors_i+1) % colors.length;
+            }
+            setInterval('flash_text()', 500);
+        </script>
+        <div class="ui grid">
+            <div class="row">
+                <div class="eight wide column">
+                    <div class="ui top attached block header">
+                        滚动字幕
+                    </div>
+                    <div class="ui bottom attached segment" style="height: 500px">
+                        <marquee id="roll_text_container" scrollAmount="2" direction="up" align=baseline behavior=scroll 
+                            style="height: 100%; width: 100%; text-align: center; font-family: Arial, Helvetica, sans-serif"> 
+                            <!-- -->
+                        </marquee>
+                    </div>
+                    <script language="javascript">
+                        (()=> {
+                            var _ajax = new XMLHttpRequest();
+                            _ajax.onreadystatechange = function() {
+                                if(_ajax.readyState == 4 && _ajax.status == 200) {
+                                    var container = document.getElementById("roll_text_container");
+                                    container.innerHTML = "<pre>" + _ajax.responseText + "</pre>";         
+                                }
+                            };
+                            _ajax.open("GET", "/tests_area/再别康桥.txt", true);
+                            _ajax.send();
+                        })();
+                    </script>
+                </div>
+                <div class="eight wide column">
+                    <div class="ui top attached block header">
+                        图片旋转变换
+                    </div>
+                    <div class="ui bottom attached segment" style="height: 500px" id="transform_area">
+                        <div style="margin-left: 30%; margin-top: 150px">
+                            <img id="the_picture" src="/res/face.jpg" width="200" height="auto">
+                        </div>
+                    </div>
+                    <script language="javascript">
+                        var the_picture = document.getElementById("the_picture");
+                        var picture_time = 0;
+                        function transform_picture() {
+                            the_picture.style.transform = 'rotate('+(picture_time*2%360)+'deg)';
+                            picture_time += 1;
+                        }; setInterval("transform_picture()", 10);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 </html>
