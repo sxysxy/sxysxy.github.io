@@ -1,0 +1,21 @@
+.with_background {
+     /*background-image: url(/res/background.jpeg);
+     background-size: cover;*/
+     background-attachment: fixed;
+}
+
+.ui.main.container {
+     margin-top: 2.5em
+}
+
+.bold_dark {
+     font-weight: bold;
+     color: darkslateblue;
+}
+
+.clock {
+     font-family: 'Times New Roman', Times, serif;
+     font-size: 20;
+     font-weight: bold;
+     color: darkkhaki;
+}
